@@ -1,11 +1,10 @@
 import os
 import requests
 from dotenv import load_dotenv
-from pprint import pprint
-from flight_search import FlightSearch
+from flight_data import FlightData
 
 load_dotenv()
-flightSearch = FlightSearch()
+flightData = FlightData()
 
 class DataManager:
     #This class is responsible for talking to the Google Sheet.
@@ -18,7 +17,7 @@ class DataManager:
 
         for i in self.sheety_data['prices']:
             city_name = i['city']
-            iata_code = flightSearch.iata_code(city_name)
+            iata_code = flightData.iata_code(city_name)
 
             sheety_params = {
                 "price":{
