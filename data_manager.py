@@ -1,8 +1,28 @@
+import os
 import requests
+from dotenv import load_dotenv
+from pprint import pprint
+from flight_search import FlightSearch
+
+load_dotenv()
+flightSearch = FlightSearch()
 
 class DataManager:
     #This class is responsible for talking to the Google Sheet.
     def __init__(self):
 
+        self.sheety_url = os.environ["SHEETY_URL"]
 
-        self.response = requests.get()
+        self.response = requests.get(url=self.sheety_url)
+        self.sheety_data = self.response.json()
+
+        for i in self.sheety_data['prices']:
+            city_name = i['city']
+            iata_code = flightSearch.iata_code(city_name)
+
+            sheety_params = {
+                "price":{
+                    "iataCode":iata_code
+                }
+            }
+            requests.put(url=f"{self.sheety_url}/{i['id']}",json=sheety_params)
