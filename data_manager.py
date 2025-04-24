@@ -3,10 +3,12 @@ import requests
 from dotenv import load_dotenv
 from flight_data import FlightData
 from flight_search import FlightSearch
+from notification_manager import NotificationManager
 
 load_dotenv()
 flightData = FlightData()
 flightSearch = FlightSearch()
+notif_man = NotificationManager()
 
 class DataManager:
     #This class is responsible for talking to the Google Sheet.
@@ -27,4 +29,5 @@ class DataManager:
                 }
             }
             requests.put(url=f"{self.sheety_url}/{i['id']}",json=sheety_params)
-            flightSearch.find_price(iata_code)
+            flightSearch.find_price(iata_code, flightData.auth_token)
+            notif_man.send_msg(float(flightSearch.price),float(self.price), self.city_name)
