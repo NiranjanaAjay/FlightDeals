@@ -39,16 +39,9 @@ class NotificationManager:
 
     def send_sms(self, message_body):
         message = self.client.messages.create(
-            from_=os.environ["TWILIO_VIRTUAL_NUMBER"],
+            from_=os.environ["TWILIO_NUMBER"],
             body=message_body,
-            to=os.environ["TWILIO_VIRTUAL_NUMBER"]
+            to=os.environ["PHNO"]
         )
         print(message.sid)
 
-    def send_msg(self, message_body):
-        message = self.client.messages.create(
-                            body=message_body,
-                            from_="+17542871306",
-                            to= os.environ["PHNO"],
-                        )
-        print(message.sid)
