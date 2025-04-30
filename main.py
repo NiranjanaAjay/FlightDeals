@@ -24,6 +24,10 @@ notification_manager = NotificationManager()
 
 ORIGIN_CITY_IATA = "LON"
 
+# ==================== Getting user information ====================================
+
+user_email = data_manager.get_emails()
+
 # ==================== Update the Airport Codes in Google Sheet ====================
 
 for row in sheet_data:
@@ -63,8 +67,16 @@ for destination in sheet_data:
     if cheapest_flight.price != "N/A" and cheapest_flight.price < destination["lowestPrice"]:
         print(f"Lower price flight found to {destination['city']}!")
 
-        notification_manager.send_sms(
-            message_body=f"Low price alert! Only £{cheapest_flight.price} to fly "
-                         f"from {cheapest_flight.origin_airport} to {cheapest_flight.destination_airport}, "
-                         f"on {cheapest_flight.out_date} until {cheapest_flight.return_date}."
-        )
+        # notification_manager.send_sms(
+        #     message_body=f"Low price alert! Only £{cheapest_flight.price} to fly "
+        #                  f"from {cheapest_flight.origin_airport} to {cheapest_flight.destination_airport}, "
+        #                  f"on {cheapest_flight.out_date} until {cheapest_flight.return_date}."
+        # )
+        for i in user_email:
+            print(i)
+            notification_manager.send_email(
+                message=f"Low price alert! Only GBP {cheapest_flight.price} to fly "
+                             f"from {cheapest_flight.origin_airport} to {cheapest_flight.destination_airport}, "
+                             f"on {cheapest_flight.out_date} until {cheapest_flight.return_date}.",
+                email= i
+            )

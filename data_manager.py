@@ -49,6 +49,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SHEETY_PRICES_ENDPOINT = os.environ['SHEETY_URL']
+SHEETY_EMAIL_ENDPOINT = os.environ['EMAIL_URL']
 
 class DataManager:
 
@@ -78,3 +79,12 @@ class DataManager:
                 auth=self._authorization
             )
             print(response.text)
+
+    def get_emails(self):
+        emails=[]
+        response = requests.get(url=SHEETY_EMAIL_ENDPOINT, auth=self._authorization)
+        data = response.json()
+        for i in data["users"]:
+            user_email = i["whatIsYourEmail?"]
+            emails.append(user_email)
+        return emails

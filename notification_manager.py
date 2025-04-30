@@ -30,12 +30,16 @@
 import os
 from dotenv import load_dotenv
 from twilio.rest import Client
+import smtplib
 load_dotenv()
 
 class NotificationManager:
 
     def __init__(self):
         self.client = Client(os.environ['TWILIO_ACCOUNT_SID'], os.environ["TWILIO_AUTH_TOKEN"])
+        self.my_email = os.environ['MY_EMAIL']
+        self.password = os.environ['APP_PASSWORD']
+
 
     def send_sms(self, message_body):
         message = self.client.messages.create(
@@ -45,3 +49,12 @@ class NotificationManager:
         )
         print(message.sid)
 
+    def send_email(self,message,email):
+        with smtplib.SMTP("smtp.gmail.com") as connection:
+            connection.starttls()
+            connection.login(user=self.my_email, password=self.password)
+            connection.sendmail(
+                from_addr=self.my_email,
+                to_addrs=email,
+                msg=f"Subject:Flight Deal!\n\n{message}"
+            )
