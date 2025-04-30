@@ -44,9 +44,22 @@ for destination in sheet_data:
         ORIGIN_CITY_IATA,
         destination["iataCode"],
         from_time=tomorrow,
-        to_time=six_month_from_today
+        to_time=six_month_from_today,
+        nonStop="true"
     )
     cheapest_flight = find_cheapest_flight(flights)
+
+    if cheapest_flight.price == "N/A" or cheapest_flight.price > destination["lowestPrice"]:
+        print(f"Getting flights for {destination}")
+        flights = flight_search.check_flights(
+            ORIGIN_CITY_IATA,
+            destination["iataCode"],
+            from_time=tomorrow,
+            to_time=six_month_from_today,
+            nonStop="false"
+        )
+        cheapest_flight = find_cheapest_flight(flights)
+
     if cheapest_flight.price != "N/A" and cheapest_flight.price < destination["lowestPrice"]:
         print(f"Lower price flight found to {destination['city']}!")
 
